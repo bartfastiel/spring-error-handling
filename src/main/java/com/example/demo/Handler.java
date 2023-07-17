@@ -16,7 +16,7 @@ public class Handler {
 
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiErrorWithFields handle(BindException e) {
+    public ApiValidationError handle(BindException e) {
         List<ApiErrorField> apiErrorFields = new ArrayList<>();
         for (FieldError fieldError : e.getFieldErrors()) {
             apiErrorFields.add(new ApiErrorField(
@@ -24,7 +24,7 @@ public class Handler {
                     fieldError.getDefaultMessage()
             ));
         }
-        return new ApiErrorWithFields(
+        return new ApiValidationError(
                 "Validation failed",
                 apiErrorFields
         );
