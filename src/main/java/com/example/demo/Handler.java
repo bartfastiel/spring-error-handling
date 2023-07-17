@@ -7,20 +7,23 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @RestControllerAdvice
 public class Handler {
 
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorMessage handle(BindException e) {
-        ErrorMessage.ErrorMessageBuilder message = ErrorMessage.builder().message(e.getMessage());
+    public Map<String, String> handle(BindException e) {
+        Map<String, String> message = new HashMap<>();
         for (FieldError fieldError : e.getFieldErrors()) {
-            message.fieldError(
+            message.put(
                     fieldError.getField(),
                     fieldError.getDefaultMessage()
             );
         }
-        return message.build();
+        return message;
     }
 }
