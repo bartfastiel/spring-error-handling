@@ -16,7 +16,7 @@ public class Handler {
 
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError handle(BindException e) {
+    public ApiErrorWithFields handle(BindException e) {
         List<ApiErrorField> apiErrorFields = new ArrayList<>();
         for (FieldError fieldError : e.getFieldErrors()) {
             apiErrorFields.add(new ApiErrorField(
@@ -24,9 +24,17 @@ public class Handler {
                     fieldError.getDefaultMessage()
             ));
         }
-        return new ApiError(
+        return new ApiErrorWithFields(
                 "Validation failed",
                 apiErrorFields
+        );
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+    public ApiError handle(IllegalStateException e) {
+        return new ApiError(
+                "Precondition failed"
         );
     }
 }
