@@ -16,14 +16,17 @@ public class Handler {
 
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public List<ErrorField> handle(BindException e) {
-        List<ErrorField> errorFields = new ArrayList<>();
+    public ApiError handle(BindException e) {
+        List<ApiErrorField> apiErrorFields = new ArrayList<>();
         for (FieldError fieldError : e.getFieldErrors()) {
-            errorFields.add(new ErrorField(
+            apiErrorFields.add(new ApiErrorField(
                     fieldError.getField(),
                     fieldError.getDefaultMessage()
             ));
         }
-        return errorFields;
+        return new ApiError(
+                "Validation failed",
+                apiErrorFields
+        );
     }
 }
